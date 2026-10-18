@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quản trị – Mầm Chữ</title>
+  <meta name="description" content="Trang quản trị dành cho chủ cửa hàng.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0F766E">
+  <link rel="icon" type="image/svg+xml" href="assets/brand/favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT: "#0F766E", dark: "#115E59", light: "#CCEBE6" },
+            sun: { DEFAULT: "#F5B82E", dark: "#D99A0B", light: "#FFF1CC" },
+            cream: "#FFFBF2", paper: "#F6F1E4", line: "#E8E1D0",
+            ink: "#1F2937", muted: "#5B6472", faint: "#8A93A0", sale: "#C2410C",
+          },
+          fontFamily: {
+            heading: ['"Baloo 2"', "Nunito", "system-ui", "sans-serif"],
+            body: ["Nunito", "system-ui", "-apple-system", '"Segoe UI"', "sans-serif"],
+          },
+          boxShadow: { card: "0 2px 8px rgba(31,41,55,0.07)", hover: "0 10px 28px rgba(31,41,55,0.14)" },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="assets/css/custom.css">
+</head>
+<body class="mc-body">
+  <a class="skip-link" href="#main">Bỏ qua, tới nội dung chính</a>
+  <header id="site-header"></header>
+
+  <!-- Chưa đăng nhập thì admin.js chỉ vẽ form đăng nhập. Chỉ khi có phiên đăng nhập mới vẽ phần quản trị. -->
+  <main id="main" class="mx-auto max-w-[1200px] px-4 pb-16 pt-8 sm:px-6 md:pt-10">
+    <div id="admin-root" aria-busy="true"></div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <!-- Hộp thoại xác nhận xóa (dùng chung cho đơn, đánh giá, sách) -->
+  <dialog id="confirm-dialog" class="dialog" aria-labelledby="cd-title" aria-describedby="cd-msg">
+    <form method="dialog" class="dialog__body">
+      <h2 id="cd-title">Xác nhận</h2>
+      <p id="cd-msg" class="mt-3"></p>
+      <p id="cd-extra" class="mt-2 text-sm text-muted"></p>
+      <div class="dialog__actions">
+        <button type="submit" value="cancel" class="btn btn-outline" id="cd-cancel" autofocus>Hủy</button>
+        <button type="submit" value="ok" class="btn btn-danger" id="cd-ok">Xóa</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Hộp thoại thêm / sửa sách -->
+  <dialog id="book-dialog" class="dialog dialog--wide" aria-labelledby="bk-title-head">
+    <form id="book-form" class="dialog__body" novalidate>
+      <h2 id="bk-title-head">Thêm sách</h2>
+      <div class="mt-5 grid gap-4 sm:grid-cols-2">
+        <div class="field sm:col-span-2">
+          <label for="bk-title">Tên sách <span class="req" aria-hidden="true">*</span></label>
+          <input id="bk-title" class="input" maxlength="200" autocomplete="off" aria-describedby="bk-title-err">
+          <p id="bk-title-err" class="field-error"></p>
+        </div>
+        <div class="field">
+          <label for="bk-slug">Slug (đường dẫn) <span class="req" aria-hidden="true">*</span></label>
+          <input id="bk-slug" class="input" maxlength="120" autocomplete="off" aria-describedby="bk-slug-err bk-slug-hint">
+          <p id="bk-slug-hint" class="field-hint" style="text-align:left">Tự tạo từ tên sách, chỉ gồm chữ thường không dấu, số và dấu gạch ngang.</p>
+          <p id="bk-slug-err" class="field-error"></p>
+        </div>
+        <div class="field">
+          <label for="bk-author">Tác giả <span class="req" aria-hidden="true">*</span></label>
+          <input id="bk-author" class="input" maxlength="150" autocomplete="off" aria-describedby="bk-author-err">
+          <p id="bk-author-err" class="field-error"></p>
+        </div>
+        <div class="field">
+          <label for="bk-category">Thể loại <span class="req" aria-hidden="true">*</span></label>
+          <select id="bk-category" class="input" aria-describedby="bk-category-err"></select>
+          <p id="bk-category-err" class="field-error"></p>
+        </div>
+        <div class="field">
+          <label for="bk-publisher">Nhà xuất bản</label>
+          <input id="bk-publisher" class="input" maxlength="150" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="bk-year">Năm xuất bản</label>
+          <input id="bk-year" class="input" type="number" inputmode="numeric" min="1900" max="2100" aria-describedby="bk-year-err">
+          <p id="bk-year-err" class="field-error"></p>
+        </div>
+        <div class="field">
+          <label for="bk-pages">Số trang</label>
+          <input id="bk-pages" class="input" type="number" inputmode="numeric" min="1" aria-describedby="bk-pages-err">
+          <p id="bk-pages-err" class="field-error"></p>
+        </div>
+        <div class="field">
+          <label for="bk-age-min">Độ tuổi từ <span class="font-normal text-muted">(để trống = sách cho phụ huynh)</span></label>
+          <input id="bk-age-min" class="input" type="number" inputmode="numeric" min="0" max="18" aria-describedby="bk-age-err">
+        </div>
+        <div class="field">
+          <label for="bk-age-max">Độ tuổi đến</label>
+          <input id="bk-age-max" class="input" type="number" inputmode="numeric" min="0" max="18" aria-describedby="bk-age-err">
+          <p id="bk-age-err" class="field-error"></p>
+        </div>
+        <div class="field">
+          <label for="bk-price">Giá bán (₫) <span class="req" aria-hidden="true">*</span></label>
+          <input id="bk-price" class="input" type="number" inputmode="numeric" min="0" aria-describedby="bk-price-err">
+          <p id="bk-price-err" class="field-error"></p>
+        </div>
+        <div class="field">
+          <label for="bk-original">Giá gốc (₫) <span class="font-normal text-muted">(để trống = không giảm giá)</span></label>
+          <input id="bk-original" class="input" type="number" inputmode="numeric" min="0" aria-describedby="bk-original-err">
+          <p id="bk-original-err" class="field-error"></p>
+        </div>
+        <div class="field">
+          <label for="bk-stock">Tồn kho <span class="req" aria-hidden="true">*</span></label>
+          <input id="bk-stock" class="input" type="number" inputmode="numeric" min="0" aria-describedby="bk-stock-err">
+          <p id="bk-stock-err" class="field-error"></p>
+        </div>
+        <div class="field">
+          <label for="bk-cover">Đường dẫn ảnh bìa</label>
+          <div class="flex items-center gap-3">
+            <input id="bk-cover" class="input" maxlength="300" autocomplete="off" placeholder="assets/covers/ten-sach.svg" aria-describedby="bk-cover-err">
+            <img id="bk-cover-preview" class="admin-thumb" alt="Xem trước ảnh bìa" src="assets/covers/default.svg" width="44" height="66">
+          </div>
+          <p id="bk-cover-err" class="field-error"></p>
+        </div>
+        <div class="field sm:col-span-2">
+          <label for="bk-desc">Mô tả</label>
+          <textarea id="bk-desc" class="input" rows="5" maxlength="5000"></textarea>
+        </div>
+        <div class="flex flex-wrap gap-x-6 gap-y-2 sm:col-span-2">
+          <label class="flex min-h-[44px] items-center gap-2 font-semibold"><input id="bk-featured" type="checkbox" class="h-5 w-5"> Hiện ở "Sách nổi bật" trên trang chủ</label>
+          <label class="flex min-h-[44px] items-center gap-2 font-semibold"><input id="bk-active" type="checkbox" class="h-5 w-5" checked> Đang bán (bỏ chọn để ẩn khỏi khách)</label>
+        </div>
+      </div>
+      <p id="bk-form-error" class="field-error mt-4" role="alert"></p>
+      <div class="dialog__actions">
+        <button type="button" class="btn btn-outline" id="bk-cancel">Hủy</button>
+        <button type="submit" class="btn btn-primary" id="bk-save">Lưu sách</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="assets/js/pages/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sách – Mầm Chữ</title>
+  <meta name="description" content="Chi tiết sách tại Mầm Chữ – nhà sách cho bé và bố mẹ.">
+  <meta name="theme-color" content="#0F766E">
+  <link rel="icon" type="image/svg+xml" href="assets/brand/favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT: "#0F766E", dark: "#115E59", light: "#CCEBE6" },
+            sun: { DEFAULT: "#F5B82E", dark: "#D99A0B", light: "#FFF1CC" },
+            cream: "#FFFBF2", paper: "#F6F1E4", line: "#E8E1D0",
+            ink: "#1F2937", muted: "#5B6472", faint: "#8A93A0", sale: "#C2410C",
+          },
+          fontFamily: {
+            heading: ['"Baloo 2"', "Nunito", "system-ui", "sans-serif"],
+            body: ["Nunito", "system-ui", "-apple-system", '"Segoe UI"', "sans-serif"],
+          },
+          boxShadow: { card: "0 2px 8px rgba(31,41,55,0.07)", hover: "0 10px 28px rgba(31,41,55,0.14)" },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="assets/css/custom.css">
+</head>
+<body class="mc-body has-buybar">
+  <a class="skip-link" href="#main">Bỏ qua, tới nội dung chính</a>
+  <header id="site-header"></header>
+
+  <!-- Nội dung do assets/js/pages/book.js vẽ theo ?slug=... (breadcrumb, thông tin, đánh giá, sách cùng thể loại) -->
+  <main id="main" class="mx-auto max-w-[1200px] px-4 pb-28 pt-6 sm:px-6 md:pt-8 lg:pb-16">
+    <nav id="breadcrumb" class="breadcrumb" aria-label="Đường dẫn"></nav>
+    <div id="book-root" class="mt-5" aria-live="polite" aria-busy="true"></div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script type="module" src="assets/js/pages/book.js"></script>
+</body>
+</html>
