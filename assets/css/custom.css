@@ -1,0 +1,402 @@
+/* custom.css – Phần Tailwind CDN không làm được: biến màu, chữ tiêu đề, nút, thẻ sách, thông báo, menu di động.
+   Màu, font, cỡ chữ theo DESIGN.md. Viết CSS thuần (Tailwind CDN không xử lý @apply trong file ngoài).
+   Lưu ý: Tailwind CDN chèn "preflight" SAU file này, nên các luật về thẻ (h1, body...) phải gắn với
+   class .mc-body để thắng về độ ưu tiên. */
+
+:root {
+  --brand: #0F766E;
+  --brand-dark: #115E59;
+  --brand-light: #CCEBE6;
+  --sun: #F5B82E;
+  --sun-dark: #D99A0B;
+  --sun-light: #FFF1CC;
+  --cream: #FFFBF2;
+  --surface: #FFFFFF;
+  --paper: #F6F1E4;
+  --line: #E8E1D0;
+  --ink: #1F2937;
+  --muted: #5B6472;
+  --faint: #8A93A0;
+  --sale: #C2410C;
+  --danger: #B91C1C;
+  --ok: #166534;
+  --warn: #92400E;
+  --shadow-card: 0 2px 8px rgba(31, 41, 55, 0.07);
+  --shadow-hover: 0 10px 28px rgba(31, 41, 55, 0.14);
+}
+
+html { scroll-behavior: smooth; }
+html.no-scroll { overflow: hidden; }
+
+/* ------------------------------------------------------------ Chữ */
+.mc-body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) { .mc-body { font-size: 17px; } }
+
+.mc-body h1, .mc-body h2, .mc-body h3, .mc-body h4 {
+  font-family: "Baloo 2", "Nunito", system-ui, sans-serif;
+  color: var(--ink);
+  margin: 0;
+}
+.mc-body h1 { font-size: 32px; line-height: 1.15; font-weight: 700; }
+.mc-body h2 { font-size: 24px; line-height: 1.25; font-weight: 700; }
+.mc-body h3 { font-size: 20px; line-height: 1.3; font-weight: 600; }
+.mc-body h4 { font-size: 18px; line-height: 1.35; font-weight: 600; }
+@media (min-width: 768px) {
+  .mc-body h1 { font-size: 48px; }
+  .mc-body h2 { font-size: 32px; }
+  .mc-body h3 { font-size: 24px; }
+  .mc-body h4 { font-size: 20px; }
+}
+.mc-body a { color: inherit; }
+.mc-body .text-link { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+.mc-body .text-link:hover { color: var(--brand-dark); }
+
+.mc-body :focus-visible {
+  outline: 3px solid rgba(15, 118, 110, 0.5);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.mc-body .site-footer :focus-visible, .mc-body .section-dark :focus-visible { outline-color: #fff; }
+
+.skip-link {
+  position: absolute; left: -9999px; top: 8px; z-index: 100;
+  background: #fff; color: var(--brand-dark); padding: 8px 14px; border-radius: 10px; font-weight: 700;
+}
+.skip-link:focus { left: 8px; }
+
+/* ------------------------------------------------------------ Navbar */
+.site-header {
+  position: sticky; top: 0; z-index: 40;
+  background: #fff; border-bottom: 1px solid var(--line);
+}
+.site-header:empty { height: 64px; }
+.nav-link {
+  font-family: "Baloo 2", "Nunito", sans-serif; font-weight: 600; color: var(--ink);
+  padding: 8px 0; border-bottom: 3px solid transparent; text-decoration: none;
+}
+.nav-link:hover { color: var(--brand); }
+.nav-link.is-active { color: var(--brand-dark); border-bottom-color: var(--sun); }
+
+.icon-btn {
+  position: relative; display: grid; place-items: center;
+  width: 44px; height: 44px; border-radius: 12px; border: 0; background: transparent;
+  color: var(--ink); cursor: pointer; text-decoration: none;
+}
+.icon-btn:hover, .icon-btn.is-active { background: var(--paper); color: var(--brand-dark); }
+.cart-badge {
+  position: absolute; top: 2px; right: 0; min-width: 20px; height: 20px; padding: 0 5px;
+  border-radius: 999px; background: var(--sun); color: var(--ink);
+  font: 700 12px/20px "Nunito", sans-serif; text-align: center;
+}
+.cart-badge[hidden] { display: none; }
+
+/* Ngăn kéo menu di động */
+.drawer { position: fixed; inset: 0; z-index: 60; visibility: hidden; pointer-events: none; }
+.drawer.is-open { visibility: visible; pointer-events: auto; }
+.drawer__overlay { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.5); opacity: 0; transition: opacity .2s; }
+.drawer.is-open .drawer__overlay { opacity: 1; }
+.drawer__panel {
+  position: absolute; top: 0; right: 0; bottom: 0; width: min(20rem, 85vw);
+  background: #fff; padding: 12px 16px 24px; transform: translateX(100%); transition: transform .25s ease;
+  box-shadow: -8px 0 28px rgba(0, 0, 0, 0.18); overflow-y: auto;
+}
+.drawer.is-open .drawer__panel { transform: translateX(0); }
+.drawer__link {
+  display: flex; align-items: center; min-height: 48px; padding: 0 8px; border-bottom: 1px solid var(--line);
+  font-family: "Baloo 2", "Nunito", sans-serif; font-weight: 600; font-size: 18px; text-decoration: none; color: var(--ink);
+}
+.drawer__link.is-active { color: var(--brand-dark); box-shadow: inset 4px 0 0 var(--sun); padding-left: 14px; }
+
+/* ------------------------------------------------------------ Footer */
+.site-footer { background: var(--brand-dark); color: #fff; }
+.mc-body .site-footer h4 { color: #fff; margin-bottom: 12px; font-size: 18px; }
+.site-footer a { color: #fff; text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.footer-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 15px; color: rgba(255,255,255,.88); }
+.footer-list--icons li { display: flex; gap: 10px; align-items: flex-start; line-height: 1.5; }
+.footer-list--icons svg { flex: none; margin-top: 3px; color: var(--sun); }
+.footer-map-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-weight: 700; color: var(--sun) !important; }
+.data-status { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
+.data-status[data-state="ok"] span:first-child { color: #4ADE80; }
+.data-status[data-state="error"] span:first-child, .data-status[data-state="idle"] span:first-child { color: #9CA3AF; }
+
+/* ------------------------------------------------------------ Nút (DESIGN 5.1) */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 20px; border-radius: 12px; border: 2px solid transparent;
+  font-family: "Baloo 2", "Nunito", sans-serif; font-weight: 600; font-size: 16px; line-height: 1.1;
+  cursor: pointer; text-decoration: none; text-align: center;
+  transition: background-color .15s, color .15s, border-color .15s, transform .15s;
+}
+.btn svg { flex: none; }
+.btn-block { width: 100%; }
+.btn-primary { background: var(--brand); color: #fff; }
+.btn-primary:hover { background: var(--brand-dark); }
+.btn-sun { background: var(--sun); color: var(--ink); }
+.btn-sun:hover { background: var(--sun-dark); }
+.btn-outline { background: transparent; border-color: var(--brand); color: var(--brand); }
+.btn-outline:hover { background: var(--brand-light); }
+.btn-ghost { background: transparent; color: var(--brand); padding: 0 12px; }
+.btn-ghost:hover { text-decoration: underline; text-underline-offset: 3px; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #991B1B; }
+.btn[disabled], .btn[aria-disabled="true"] { background: #E5E7EB; color: var(--faint); border-color: transparent; cursor: not-allowed; }
+.btn.is-loading { pointer-events: none; opacity: .85; }
+
+/* ------------------------------------------------------------ Badge, giá (DESIGN 5.4) */
+.badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 2px 10px; font: 700 13px/20px "Nunito", sans-serif; white-space: nowrap; }
+.badge-sale { background: var(--sale); color: #fff; }
+.badge-age { background: var(--sun-light); color: var(--warn); }
+.badge-low { background: #FEF3C7; color: var(--warn); }
+.badge-out { background: #FEE2E2; color: var(--danger); }
+.badge-ok { background: #DCFCE7; color: var(--ok); }
+.price { font-family: "Baloo 2", "Nunito", sans-serif; font-weight: 700; font-size: 20px; line-height: 1.2; color: var(--brand); }
+.price-old { color: var(--muted); text-decoration: line-through; font-weight: 600; font-size: 14px; margin-left: 8px; }
+
+/* ------------------------------------------------------------ Thẻ sách (DESIGN 5.2) */
+.book-card {
+  display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line);
+  border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-card); transition: transform .2s, box-shadow .2s;
+}
+@media (hover: hover) { .book-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); } }
+.book-card__cover { position: relative; display: block; aspect-ratio: 2 / 3; background: var(--paper); overflow: hidden; }
+.book-card__cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.book-card.is-soldout .book-card__cover img { opacity: .5; }
+.book-card__sale { position: absolute; top: 8px; left: 8px; }
+.book-card__age { position: absolute; top: 8px; right: 8px; }
+.book-card__body { display: flex; flex: 1; flex-direction: column; gap: 4px; padding: 12px; }
+@media (min-width: 640px) { .book-card__body { padding: 16px; } }
+.mc-body .book-card__title {
+  font-size: 17px; line-height: 1.3; font-weight: 600; min-height: 2.6em;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.book-card__title a { text-decoration: none; color: var(--ink); }
+.book-card__title a:hover { color: var(--brand); }
+.book-card__author { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.book-card__price { margin-top: 4px; display: flex; flex-wrap: wrap; align-items: baseline; }
+.book-card__stock { min-height: 24px; margin-bottom: 4px; }
+.book-card .btn { margin-top: auto; }
+
+/* ------------------------------------------------------------ Thẻ thể loại, 3 bước */
+.cat-card {
+  display: flex; flex-direction: column; gap: 6px; padding: 20px; border-radius: 16px;
+  background: var(--cat-bg, #E3F5EF); color: var(--ink); text-decoration: none; transition: transform .2s, box-shadow .2s;
+}
+@media (hover: hover) { .cat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); } }
+.cat-card__icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: #fff; color: var(--brand); margin-bottom: 4px; }
+.mc-body .cat-card h3 { font-size: 20px; }
+.cat-card p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.cat-card__more { margin-top: 8px; display: inline-flex; align-items: center; gap: 4px; font-weight: 700; font-size: 14px; color: var(--brand-dark); }
+
+.step-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px; box-shadow: var(--shadow-card); }
+.step-card__num {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px;
+  background: var(--brand); color: #fff; font: 700 20px/1 "Baloo 2", sans-serif;
+}
+.mc-body .step-card h3 { margin-top: 12px; font-size: 20px; }
+.step-card p { margin: 6px 0 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
+
+.section-dark { background: var(--brand-dark); color: #fff; }
+.mc-body .section-dark h2 { color: #fff; }
+
+/* ------------------------------------------------------------ Trạng thái: khung xương, rỗng, lỗi */
+.skeleton { background: #F1ECDD; border-radius: 12px; animation: mc-pulse 1.4s ease-in-out infinite; }
+@keyframes mc-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+.state-box {
+  grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: #fff; border: 1px dashed var(--line); border-radius: 16px;
+}
+.state-box img { width: 88px; height: 88px; margin: 0 auto 12px; }
+.state-box p { margin: 0 0 4px; }
+.state-box .hint { font-size: 13px; color: var(--faint); }
+
+/* ------------------------------------------------------------ Thông báo (toast) */
+.toast-root { position: fixed; z-index: 80; left: 16px; right: 16px; bottom: 16px; display: grid; gap: 8px; pointer-events: none; justify-items: stretch; }
+@media (min-width: 640px) { .toast-root { left: auto; right: 24px; bottom: 24px; width: 380px; } }
+.toast {
+  pointer-events: auto; display: flex; align-items: center; gap: 10px; padding: 12px 12px 12px 14px;
+  border-radius: 14px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-hover);
+  animation: mc-toast-in .2s ease; font-weight: 600;
+}
+.toast.is-leaving { opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .2s; }
+.toast__msg { flex: 1; }
+.toast__icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 999px; flex: none; }
+.toast--success .toast__icon { background: #DCFCE7; color: var(--ok); }
+.toast--error .toast__icon { background: #FEE2E2; color: var(--danger); }
+.toast--info .toast__icon { background: #DBEAFE; color: #1E40AF; }
+.toast__close { display: grid; place-items: center; width: 36px; height: 36px; border: 0; background: transparent; color: var(--muted); border-radius: 10px; cursor: pointer; }
+.toast__close:hover { background: var(--paper); }
+@keyframes mc-toast-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ------------------------------------------------------------ Form (DESIGN 5.3) */
+.field { display: grid; gap: 6px; align-content: start; }
+.field > label, .field-label { font-weight: 700; font-size: 16px; line-height: 1.3; }
+.field .req { color: var(--danger); margin-left: 2px; }
+.input {
+  width: 100%; min-height: 48px; padding: 10px 14px; background: #fff; color: var(--ink);
+  border: 1.5px solid var(--line); border-radius: 12px; font: inherit; font-size: 16px; line-height: 1.4;
+  transition: border-color .15s, box-shadow .15s;
+}
+textarea.input { min-height: 112px; resize: vertical; }
+.input::placeholder { color: var(--faint); }
+.input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2); }
+.input[aria-invalid="true"] { border-color: var(--danger); }
+.field-hint { font-size: 13px; color: var(--faint); text-align: right; }
+.field-error { display: none; align-items: flex-start; gap: 6px; color: var(--danger); font-size: 14px; font-weight: 600; line-height: 1.4; }
+.field-error.is-visible { display: flex; }
+.field-error svg { flex: none; margin-top: 2px; }
+.hp-field { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
+
+/* Ô tìm kiếm + chip thể loại (books.html) */
+.search-box { position: relative; }
+.search-box svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--faint); pointer-events: none; }
+.search-box .input { padding-left: 44px; }
+.chip-row { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 6px; scrollbar-width: thin; }
+@media (min-width: 768px) { .chip-row { flex-wrap: wrap; overflow: visible; } }
+.chip {
+  flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px;
+  border: 1.5px solid var(--line); background: #fff; color: var(--ink); cursor: pointer;
+  font-family: "Baloo 2", "Nunito", sans-serif; font-weight: 600; font-size: 16px; line-height: 1;
+  transition: background-color .15s, border-color .15s, color .15s;
+}
+.chip:hover { border-color: var(--brand); color: var(--brand); }
+.chip.is-active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.toolbar { background: rgba(255, 251, 242, 0.96); }
+@supports (backdrop-filter: blur(6px)) { .toolbar { backdrop-filter: blur(6px); } }
+
+/* Breadcrumb (DESIGN 5.7) */
+.breadcrumb ol { display: flex; align-items: center; gap: 6px; margin: 0; padding: 0 0 4px; list-style: none; font-size: 14px; color: var(--muted); overflow-x: auto; white-space: nowrap; }
+.breadcrumb li { display: inline-flex; align-items: center; gap: 6px; flex: none; }
+.breadcrumb a { color: var(--brand); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.breadcrumb [aria-current="page"] { font-weight: 700; color: var(--ink); max-width: 60vw; overflow: hidden; text-overflow: ellipsis; }
+.breadcrumb svg { color: var(--faint); }
+
+/* Sao đánh giá */
+.stars { display: inline-flex; gap: 2px; vertical-align: middle; }
+.stars .star-on { color: var(--sun); }
+.stars .star-off { color: #CBD5E1; }
+.star-input { display: inline-flex; flex-direction: row-reverse; gap: 2px; justify-self: start; width: max-content; }
+.star-input input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.star-input label { display: grid; place-items: center; width: 44px; height: 44px; color: #CBD5E1; cursor: pointer; border-radius: 10px; }
+.star-input label svg { width: 30px; height: 30px; fill: none; }
+.star-input input:checked ~ label, .star-input label:hover, .star-input label:hover ~ label { color: var(--sun); }
+.star-input input:checked ~ label svg, .star-input label:hover svg, .star-input label:hover ~ label svg { fill: currentColor; }
+.star-input input:focus-visible + label { outline: 3px solid rgba(15, 118, 110, 0.5); outline-offset: 1px; }
+
+/* Chọn số lượng */
+.qty { display: inline-flex; align-items: stretch; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; overflow: hidden; }
+.qty button { display: grid; place-items: center; width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.qty button:hover:not([disabled]) { background: var(--paper); color: var(--brand-dark); }
+.qty button[disabled] { color: var(--faint); cursor: not-allowed; }
+.qty input { width: 56px; border: 0; text-align: center; font: 700 17px "Nunito", sans-serif; color: var(--ink); background: transparent; -moz-appearance: textfield; }
+.qty input::-webkit-outer-spin-button, .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.qty input:focus { outline: none; background: var(--cream); }
+
+/* Trang chi tiết sách */
+.price-lg { font-family: "Baloo 2", "Nunito", sans-serif; font-weight: 700; font-size: 30px; line-height: 1.1; color: var(--brand); }
+@media (min-width: 768px) { .price-lg { font-size: 36px; } }
+.price-lg-old { color: var(--muted); text-decoration: line-through; font-weight: 600; font-size: 18px; }
+.spec-list { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; font-size: 15px; }
+.spec-list dt { color: var(--muted); }
+.spec-list dd { margin: 0; font-weight: 600; }
+.prose-desc p { margin: 0 0 12px; max-width: 70ch; }
+.review-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; }
+.review-card p { margin: 8px 0 0; white-space: pre-line; overflow-wrap: anywhere; }
+.review-card time { font-size: 13px; color: var(--faint); }
+.review-summary { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px; text-align: center; }
+.review-summary__avg { font: 700 48px/1 "Baloo 2", sans-serif; color: var(--ink); }
+.panel { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-card); }
+@media (min-width: 640px) { .panel { padding: 28px; } }
+/* Giỏ hàng (cart.html) */
+.cart-line {
+  display: grid; grid-template-columns: 72px 1fr; gap: 12px 14px; padding: 14px;
+  background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-card);
+}
+.cart-line--bad { border-color: #FCA5A5; background: #FFF7F7; }
+.cart-line__cover { display: block; aspect-ratio: 2 / 3; border-radius: 8px; overflow: hidden; background: var(--paper); }
+.cart-line__cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mc-body .cart-line__title { font-size: 18px; line-height: 1.3; font-weight: 600; margin: 0; }
+.cart-line__title a { text-decoration: none; color: var(--ink); }
+.cart-line__title a:hover { color: var(--brand); }
+.cart-line__side { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 14px; }
+.cart-line__total { font: 700 20px/1.2 "Baloo 2", sans-serif; color: var(--brand); }
+.cart-remove { color: var(--muted); padding: 0 10px; min-height: 44px; }
+.cart-remove:hover { color: var(--danger); }
+@media (min-width: 640px) {
+  .cart-line { grid-template-columns: 88px 1fr auto; padding: 16px; }
+  .cart-line__side { grid-column: auto; flex-direction: column; align-items: flex-end; justify-content: space-between; }
+}
+.notice { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 12px; font-weight: 600; font-size: 15px; line-height: 1.45; }
+.notice svg { flex: none; margin-top: 2px; }
+.notice--info { background: #DBEAFE; color: #1E40AF; }
+.notice--warn { background: #FEF3C7; color: var(--warn); }
+.notice--error { background: #FEE2E2; color: var(--danger); }
+.sum-row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; }
+.sum-total { font: 700 28px/1.2 "Baloo 2", sans-serif; color: var(--brand); }
+.success-mark { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 999px; background: #DCFCE7; color: var(--ok); }
+
+/* Trang Về chúng tôi và Chính sách */
+.icon-chip { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 14px; background: var(--brand-light); color: var(--brand-dark); }
+.info-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px; box-shadow: var(--shadow-card); }
+.mc-body .info-card h3 { margin-top: 12px; font-size: 20px; }
+.info-card p { margin: 6px 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.bullets { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
+.bullets li { position: relative; padding-left: 22px; line-height: 1.6; }
+.bullets li::before { content: ""; position: absolute; left: 4px; top: 0.72em; width: 8px; height: 8px; border-radius: 999px; background: var(--sun); }
+.contact-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.contact-list li { display: flex; gap: 14px; align-items: flex-start; }
+.contact-list strong { display: block; font-size: 14px; color: var(--muted); font-weight: 700; }
+.contact-list a { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+.map-frame { position: relative; height: 280px; overflow: hidden; border-radius: 16px; border: 1px solid var(--line); background: var(--paper); }
+.map-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+@media (min-width: 1024px) { .map-frame { height: 360px; } }
+.toc a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--line); background: #fff; font: 600 16px/1 "Baloo 2", "Nunito", sans-serif; text-decoration: none; color: var(--ink); }
+.toc a:hover { border-color: var(--brand); color: var(--brand); }
+
+/* Quản trị (admin.html) */
+.tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tab {
+  min-height: 44px; padding: 0 18px; border: 0; border-bottom: 3px solid transparent; background: transparent; cursor: pointer;
+  font: 600 16px/1 "Baloo 2", "Nunito", sans-serif; color: var(--muted); white-space: nowrap;
+}
+.tab:hover { color: var(--brand); }
+.tab[aria-selected="true"] { color: var(--brand-dark); border-bottom-color: var(--sun); }
+.table-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--line); border-radius: 16px; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.admin-table th { background: var(--paper); text-align: left; padding: 10px 12px; font-weight: 700; white-space: nowrap; }
+.admin-table td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: middle; }
+.admin-table .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.admin-table tr.is-hidden-book td { background: #FAF7EE; color: var(--muted); }
+.admin-table tr.detail td { background: var(--cream); }
+.btn-sm { min-height: 36px; padding: 0 12px; font-size: 14px; border-radius: 10px; }
+.input-sm { min-height: 40px; padding: 6px 10px; font-size: 15px; border-radius: 10px; }
+.badge-st-moi { background: #DBEAFE; color: #1E40AF; }
+.badge-st-dang_giao { background: #FEF3C7; color: #92400E; }
+.badge-st-hoan_tat { background: #DCFCE7; color: #166534; }
+.link-btn { background: none; border: 0; padding: 4px 0; color: var(--brand); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.admin-thumb { width: 44px; height: 66px; object-fit: cover; border-radius: 6px; background: var(--paper); flex: none; }
+.chip-count { margin-left: 6px; font-weight: 600; opacity: .75; }
+.dialog { border: 0; border-radius: 20px; padding: 0; width: min(92vw, 520px); max-height: 92vh; color: var(--ink); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
+.dialog::backdrop { background: rgba(15, 23, 42, 0.55); }
+.dialog--wide { width: min(94vw, 760px); }
+.dialog form { max-height: 92vh; overflow-y: auto; }
+.dialog__body { padding: 22px 22px 18px; }
+.dialog__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.mc-body .dialog h2 { font-size: 22px; }
+
+/* Thanh mua hàng dính đáy trên di động: đẩy toast lên cao hơn */
+@media (max-width: 1023px) { .has-buybar .toast-root { bottom: 88px; } }
+
+/* ------------------------------------------------------------ Giảm chuyển động */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .book-card:hover, .cat-card:hover { transform: none !important; }
+}
