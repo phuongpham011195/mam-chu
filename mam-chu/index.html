@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mầm Chữ – Nhà sách cho bé và bố mẹ</title>
+  <meta name="description" content="Gieo chữ hôm nay, gặt tương lai ngày mai. Sách thiếu nhi, văn học, kinh tế và kỹ năng làm cha mẹ, thanh toán khi nhận hàng.">
+  <meta name="theme-color" content="#0F766E">
+  <link rel="icon" type="image/svg+xml" href="assets/brand/favicon.svg">
+
+  <!-- Font: Baloo 2 (tiêu đề, nút) + Nunito (nội dung), có tiếng Việt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS qua CDN (ghim phiên bản) + bảng màu/font của Mầm Chữ (DESIGN.md mục 2, 3) -->
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT: "#0F766E", dark: "#115E59", light: "#CCEBE6" },
+            sun: { DEFAULT: "#F5B82E", dark: "#D99A0B", light: "#FFF1CC" },
+            cream: "#FFFBF2",
+            paper: "#F6F1E4",
+            line: "#E8E1D0",
+            ink: "#1F2937",
+            muted: "#5B6472",
+            faint: "#8A93A0",
+            sale: "#C2410C",
+          },
+          fontFamily: {
+            heading: ['"Baloo 2"', "Nunito", "system-ui", "sans-serif"],
+            body: ["Nunito", "system-ui", "-apple-system", '"Segoe UI"', "sans-serif"],
+          },
+          boxShadow: {
+            card: "0 2px 8px rgba(31,41,55,0.07)",
+            hover: "0 10px 28px rgba(31,41,55,0.14)",
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="assets/css/custom.css">
+</head>
+<body class="mc-body">
+  <a class="skip-link" href="#main">Bỏ qua, tới nội dung chính</a>
+  <header id="site-header"></header>
+
+  <main id="main">
+    <!-- 1. Hero: chữ HTML ở nửa trái, ảnh banner-1.svg ở nửa phải (DESIGN 4.1) -->
+    <section class="relative isolate overflow-hidden bg-cream" aria-labelledby="hero-title">
+      <img src="assets/banners/banner-1.svg" alt="" aria-hidden="true" width="1920" height="640"
+           class="pointer-events-none absolute inset-0 -z-10 hidden h-full w-full object-cover object-right lg:block">
+      <div class="mx-auto max-w-[1200px] px-4 pt-10 sm:px-6 lg:flex lg:min-h-[480px] lg:items-center lg:py-16">
+        <div class="max-w-xl">
+          <h1 id="hero-title">Gieo chữ hôm nay, gặt tương lai ngày mai.</h1>
+          <p class="mt-4 text-lg text-muted">Sách chọn kỹ cho bé và cho cả bố mẹ, để chọn nhanh và đọc vui.</p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a href="books.html" class="btn btn-primary">Xem sách cho bé <span data-icon="arrow-right" data-icon-size="20"></span></a>
+            <a href="about.html" class="btn btn-outline">Về Mầm Chữ</a>
+          </div>
+        </div>
+      </div>
+      <img src="assets/banners/banner-1.svg" alt="" aria-hidden="true" width="1920" height="640"
+           class="mt-6 h-44 w-full object-cover object-right sm:h-60 lg:hidden">
+    </section>
+
+    <!-- 2. Thể loại (F01: SELECT categories) -->
+    <section class="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 md:py-20" aria-labelledby="cat-title">
+      <h2 id="cat-title">Chọn sách theo thể loại</h2>
+      <div id="categories-grid" class="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4" aria-live="polite" aria-busy="true"></div>
+    </section>
+
+    <!-- 3. Sách nổi bật (F02: SELECT books, F17: giá gốc + badge giảm giá) -->
+    <section class="bg-white py-12 md:py-20" aria-labelledby="featured-title">
+      <div class="mx-auto max-w-[1200px] px-4 sm:px-6">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <h2 id="featured-title">Sách nổi bật</h2>
+          <a href="books.html" class="btn btn-ghost">Xem tất cả sách <span data-icon="arrow-right" data-icon-size="20"></span></a>
+        </div>
+        <div id="featured-grid" class="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4" aria-live="polite" aria-busy="true"></div>
+      </div>
+    </section>
+
+    <!-- 4. Đặt hàng 3 bước (neo #cach-dat-hang cho nút "Xem cách đặt hàng") -->
+    <section id="cach-dat-hang" class="mx-auto max-w-[1200px] scroll-mt-24 px-4 py-12 sm:px-6 md:py-20" aria-labelledby="steps-title">
+      <h2 id="steps-title">Đặt sách chỉ trong 3 bước</h2>
+      <ol class="mt-6 grid gap-4 md:grid-cols-3">
+        <li class="step-card">
+          <span class="step-card__num" aria-hidden="true">1</span>
+          <h3>Chọn sách</h3>
+          <p>Chọn cuốn bé thích, bố mẹ cần. Bấm "Thêm vào giỏ" là xong.</p>
+        </li>
+        <li class="step-card">
+          <span class="step-card__num" aria-hidden="true">2</span>
+          <h3>Điền thông tin</h3>
+          <p>Cho Mầm Chữ biết tên, số điện thoại và địa chỉ nhận sách.</p>
+        </li>
+        <li class="step-card">
+          <span class="step-card__num" aria-hidden="true">3</span>
+          <h3>Nhận sách, trả tiền khi giao</h3>
+          <p>Kiểm tra sách rồi mới thanh toán. Miễn phí giao hàng toàn quốc (chính sách mẫu).</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 5. Góc phụ huynh -->
+    <section class="mx-auto max-w-[1200px] px-4 sm:px-6" aria-labelledby="parents-title">
+      <div class="flex flex-col gap-6 rounded-3xl bg-sun-light p-6 sm:p-10 md:flex-row md:items-center md:justify-between">
+        <div class="flex gap-4">
+          <span class="grid h-14 w-14 flex-none place-items-center rounded-2xl bg-white text-brand" data-icon="heart" data-icon-size="28"></span>
+          <div class="max-w-2xl">
+            <h2 id="parents-title">Góc phụ huynh</h2>
+            <p class="mt-2 text-muted">Bố mẹ cũng cần một cuốn sách hay. Từ cách lắng nghe con, giữ bình tĩnh khi con nổi giận đến chuyện tiền bạc trong nhà, Mầm Chữ chọn sẵn những cuốn dễ đọc, dễ áp dụng cho bố mẹ.</p>
+          </div>
+        </div>
+        <a href="books.html?category=ky-nang" class="btn btn-primary flex-none">Xem sách kỹ năng làm cha mẹ</a>
+      </div>
+    </section>
+
+    <!-- 6. Kêu gọi hành động -->
+    <section class="section-dark mt-12 md:mt-20" aria-labelledby="cta-title">
+      <div class="mx-auto flex max-w-[1200px] flex-col items-start gap-6 px-4 py-12 sm:px-6 md:flex-row md:items-center md:justify-between md:py-16">
+        <h2 id="cta-title" class="max-w-xl">Hôm nay bố mẹ gieo cuốn sách nào cho bé?</h2>
+        <a href="books.html" class="btn btn-sun">Chọn sách ngay <span data-icon="arrow-right" data-icon-size="20"></span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script type="module" src="assets/js/pages/home.js"></script>
+</body>
+</html>
